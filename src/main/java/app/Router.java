@@ -8,17 +8,17 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import app.templates.Controllable;
+import app.controllers.Controllable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 public class Router {
 
-	private static final Logger logger = Logger.getLogger(Router.class);
+	private static final Logger _logger = Logger.getLogger(Router.class);
 
 	private Map<String, String> _routes;
 
-	private FXMLLoader _loader = new FXMLLoader();
+	public static final String TEMPLATES = "app/templates/";
 
 	public Router() {
 		_routes = new HashMap<String, String>();
@@ -36,22 +36,19 @@ public class Router {
 	 * @throws IOException
 	 */
 	public Pane load(String route, App app) throws Exception {
-		logger.trace("load()");
-		String fileName = _routes.get(route);
-		URL templateURL = this.getClass().getClassLoader().getResource("app/templates/" + fileName + ".fxml");
-		_loader.setLocation(templateURL);
+		_logger.trace("load()");
 		try {
-			Class<?> controllerClass = Class.forName("app.controllers." + fileName);
-			Constructor<?> constructor = controllerClass.getConstructor(Pane.class);
-//			Controller controller = (Controller) controllerClass.newInstance();
-			Controllable controller = (Controllable) constructor.newInstance();
-			_loader.setController(controller);
-			Pane pane = (Pane) _loader.load();
+			Class<?> controllerClass = Class.forName("app.controllers." + route);
+			Controllable controller = (Controllable) controllerClass.newInstance();
+			URL templateURL = this.getClass().getClassLoader().getResource(TEMPLATES + route + ".fxml");
+			FXMLLoader loader = new FXMLLoader(templateURL);
+			loader.setController(controller);
+			Pane pane = (Pane) loader.load();
 			controller.setApp(app);
-			logger.debug("stop");
 			return pane;
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IOException e) {
-			logger.error(e.getMessage(), e);
+			_logger.error(e.getMessage(), e);
+			System.exit(1);
 			throw e;
 		}
 	}

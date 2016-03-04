@@ -1,4 +1,4 @@
-package app.templates;
+package app.controllers;
 
 import app.App;
 

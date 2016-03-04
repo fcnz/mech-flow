@@ -1,4 +1,4 @@
-package app.templates;
+package app.controllers;
 
 import org.apache.log4j.Logger;
 
@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 
 public class RootLayout implements Controllable {
 
-	private static final Logger logger = Logger.getLogger(RootLayout.class);
+	private static final Logger _logger = Logger.getLogger(RootLayout.class);
 
 	@FXML
 	private Label _appName;
@@ -20,13 +20,14 @@ public class RootLayout implements Controllable {
 
 	public RootLayout() {
 		super();
-		logger.trace("RootLayout()");
+		_logger.trace("RootLayout()");
 	}
 
 	@Override
 	public void setApp(App app) {
 		_app = app;
 		_appName.setText("Mech Flow v0.0.1");
+		_app.hook1();
 	}
 
 }
